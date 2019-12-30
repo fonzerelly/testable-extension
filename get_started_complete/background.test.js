@@ -15,5 +15,11 @@ describe('background', () => {
             sinon.assert.calledWith(chrome.storage.sync.set, {color: '#3aa757'}, sinon.match.func)
         })
 
+        /** 
+         * as described in options the test for console.log of chrome.storage.syn.set 
+         * seems to be unnecessary
+         * 
+        */
+
     })
 })
