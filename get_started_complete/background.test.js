@@ -30,6 +30,9 @@ describe('background', () => {
             return paramObj
         })
 
+        chrome.declarativeContent.ShowPageAction = jest.fn().mockImplementation(() => {
+            return {}
+        })
         require('./background')
         chrome.runtime.onInstalled.addListener.yield() // by this trick we can mock the onInstalled-Event
     })
@@ -63,5 +66,10 @@ describe('background', () => {
             const rule = chrome.declarativeContent.onPageChanged.addRules.mock.calls[0][0][0]
             expect(rule.conditions[0].pageUrl.hostEquals).toEqual('developer.chrome.com')
         })
+
+        /** 
+         * Since there seems to be nothing specific about the ShowPageAction, I
+         * decided to leaf out this test.
+         */
     })
 })
