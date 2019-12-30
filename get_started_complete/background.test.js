@@ -15,10 +15,13 @@ describe('background', () => {
          * Please recognize the minimalistic reimplementation, that calls the passed 
          * in callback. 
          */
-        chrome.declarativeContent.onPageChanged.removeRules = jest.fn().mockImplementation((_, cb)=> {
+        chrome.declarativeContent.onPageChanged.removeRules = jest.fn().mockImplementation((_, cb) => {
             cb()
         })
-        
+
+        chrome.declarativeContent.onPageChanged.addRules = jest.fn()
+
+
         require('./background')
         chrome.runtime.onInstalled.addListener.yield() // by this trick we can mock the onInstalled-Event
     })
@@ -35,6 +38,10 @@ describe('background', () => {
 
         it('should remove rules', () => {
             expect(chrome.declarativeContent.onPageChanged.removeRules).toHaveBeenCalled()
+        })
+
+        it('should add rules again', () => {
+            expect(chrome.declarativeContent.onPageChanged.addRules).toHaveBeenCalled()
         })
     })
 })
