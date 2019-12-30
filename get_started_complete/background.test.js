@@ -7,12 +7,24 @@ describe('background', () => {
     })
     beforeEach(() => {
         window.chrome = chrome
+
+        /**
+         * I would have expected, that this function is also part of sinon-chrome,
+         * but I could not find it. Therefore I have to mock onPageChanged.removeRules
+         * myself.
+         * Please recognize the minimalistic reimplementation, that calls the passed 
+         * in callback. 
+         */
+        chrome.declarativeContent.onPageChanged.removeRules = jest.fn().mockImplementation((_, cb)=> {
+            cb()
+        })
+        
         require('./background')
         chrome.runtime.onInstalled.addListener.yield() // by this trick we can mock the onInstalled-Event
     })
     describe('onInstalled', () => {
         it('should store default color', () => {
-            sinon.assert.calledWith(chrome.storage.sync.set, {color: '#3aa757'}, sinon.match.func)
+            sinon.assert.calledWith(chrome.storage.sync.set, { color: '#3aa757' }, sinon.match.func)
         })
 
         /** 
@@ -21,5 +33,8 @@ describe('background', () => {
          * 
         */
 
+        it('should remove rules', () => {
+            expect(chrome.declarativeContent.onPageChanged.removeRules).toHaveBeenCalled()
+        })
     })
 })
